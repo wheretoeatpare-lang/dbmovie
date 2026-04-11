@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>StreamVault — Watch Free</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #080a0f;
+    --surface: #0e1117;
+    --card: #12151d;
+    --border: #1e2330;
+    --accent: #e63946;
+    --accent2: #f4a261;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --radius: 10px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999; opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 32px;
+    background: rgba(8,10,15,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .nav-tabs {
+    display: flex; gap: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px;
+  }
+
+  .nav-tab {
+    padding: 7px 18px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nav-tab.active, .nav-tab:hover { background: var(--accent); color: #fff; }
+
+  .search-wrap {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+  }
+
+  .search-wrap input {
+    background: none; border: none; outline: none;
+    color: var(--text); font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem; width: 200px;
+  }
+  .search-wrap input::placeholder { color: var(--muted); }
+  .search-icon { color: var(--muted); font-size: 1rem; }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    height: 70vh; min-height: 440px;
+    display: flex; align-items: flex-end;
+    padding: 48px 40px;
+    overflow: hidden;
+  }
+
+  #hero-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #0d0f1a 0%, #1a0a14 100%);
+    transition: background 0.6s;
+  }
+
+  #hero-bg img {
+    width: 100%; height: 100%; object-fit: cover;
+    opacity: 0.25; transition: opacity 0.6s;
+  }
+
+  #hero::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, var(--bg) 0%, transparent 60%),
+                linear-gradient(to right, var(--bg) 0%, transparent 50%);
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    max-width: 560px;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--accent);
+    color: #fff; font-size: 0.7rem; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 4px; margin-bottom: 12px;
+  }
+
+  #hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1; letter-spacing: 1px;
+    margin-bottom: 14px;
+  }
+
+  #hero-desc {
+    color: #a0aec0; font-size: 0.9rem; line-height: 1.6;
+    margin-bottom: 24px;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .hero-actions { display: flex; gap: 12px; }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent);
+    color: #fff; border: none;
+    padding: 12px 24px; border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif; font-weight: 600;
+    font-size: 0.9rem; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(230,57,70,.4); }
+
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,.08);
+    color: var(--text); border: 1px solid var(--border);
+    padding: 12px 24px; border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif; font-weight: 500;
+    font-size: 0.9rem; cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: background 0.2s;
+  }
+  .btn-outline:hover { background: rgba(255,255,255,.14); }
+
+  /* ── MAIN ── */
+  main { padding: 0 32px 60px; max-width: 1400px; margin: 0 auto; }
+
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin: 40px 0 20px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem; letter-spacing: 1px;
+  }
+
+  .section-title span {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  .see-all {
+    color: var(--accent); font-size: 0.8rem; font-weight: 500;
+    background: none; border: none; cursor: pointer;
+    text-decoration: underline; text-underline-offset: 3px;
+  }
+
+  /* ── GRID ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--card);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 16px 40px rgba(0,0,0,.6); }
+  .card:hover .card-overlay { opacity: 1; }
+
+  .card-poster {
+    aspect-ratio: 2/3; width: 100%;
+    object-fit: cover; display: block;
+    background: var(--surface);
+  }
+
+  .card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,.95) 0%, rgba(0,0,0,.3) 60%, transparent 100%);
+    opacity: 0; transition: opacity 0.25s;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .play-btn {
+    width: 48px; height: 48px;
+    background: var(--accent);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(230,57,70,.5);
+    margin-bottom: 60px;
+  }
+  .play-btn svg { fill: #fff; margin-left: 3px; }
+
+  .card-info {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 12px 10px;
+    background: linear-gradient(transparent, rgba(0,0,0,.9));
+  }
+
+  .card-title {
+    font-size: 0.78rem; font-weight: 600;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    margin-bottom: 4px;
+  }
+
+  .card-meta {
+    display: flex; gap: 8px; align-items: center;
+    font-size: 0.68rem; color: var(--muted);
+  }
+
+  .card-type {
+    background: var(--accent);
+    color: #fff; font-size: 0.6rem; font-weight: 700;
+    padding: 2px 6px; border-radius: 3px; letter-spacing: 0.5px;
+  }
+
+  /* ── PLAYER MODAL ── */
+  #modal {
+    display: none;
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,.92);
+    backdrop-filter: blur(12px);
+    flex-direction: column; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  #modal.open { display: flex; }
+
+  .modal-inner {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    width: 100%; max-width: 960px;
+    overflow: hidden;
+    animation: popIn .25s cubic-bezier(.175,.885,.32,1.275) both;
+  }
+
+  @keyframes popIn {
+    from { transform: scale(.9); opacity: 0; }
+    to   { transform: scale(1);  opacity: 1; }
+  }
+
+  .modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  #modal-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem; letter-spacing: 1px;
+  }
+
+  .modal-close {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); font-size: 1.2rem;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background .2s;
+  }
+  .modal-close:hover { background: var(--accent); }
+
+  .modal-player {
+    position: relative; aspect-ratio: 16/9; width: 100%;
+    background: #000;
+  }
+
+  .modal-player iframe {
+    width: 100%; height: 100%; border: none;
+  }
+
+  .modal-footer {
+    padding: 14px 20px;
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  }
+
+  .modal-desc {
+    color: var(--muted); font-size: 0.82rem; line-height: 1.5;
+    flex: 1; min-width: 200px;
+  }
+
+  /* TV season/episode picker */
+  .ep-picker {
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  }
+
+  .ep-select {
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 6px 10px; font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; cursor: pointer; outline: none;
+  }
+
+  .ep-go {
+    background: var(--accent); color: #fff; border: none;
+    border-radius: 6px; padding: 6px 14px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
+    font-weight: 600; cursor: pointer;
+  }
+
+  /* ── LOADING / SKELETON ── */
+  .skeleton {
+    background: linear-gradient(90deg, var(--card) 25%, var(--surface) 50%, var(--card) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: var(--radius);
+  }
+  @keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  .skeleton-card { aspect-ratio: 2/3; }
+
+  /* ── EMPTY / ERROR ── */
+  .empty {
+    grid-column: 1 / -1;
+    text-align: center; color: var(--muted);
+    padding: 40px; font-size: 0.9rem;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 12px 16px; }
+    .search-wrap input { width: 120px; }
+    main { padding: 0 16px 60px; }
+    #hero { padding: 32px 20px; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+  }
+
+  @media (max-width: 480px) {
+    .nav-tabs { display: none; }
+    .grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">StreamVault</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('movies')">Movies</button>
+    <button class="nav-tab" onclick="switchTab('tv')">TV Shows</button>
+  </div>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search-input" placeholder="Search TMDB titles…" />
+  </div>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <div id="hero-bg"><img id="hero-img" src="" alt=""/></div>
+  <div class="hero-content">
+    <div class="hero-badge">🔥 Trending Now</div>
+    <div id="hero-title">Loading…</div>
+    <div id="hero-desc"></div>
+    <div class="hero-actions">
+      <button class="btn-primary" id="hero-play">▶ Watch Now</button>
+      <button class="btn-outline" id="hero-info">ℹ More Info</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main>
+  <div class="section-header">
+    <div class="section-title">🆕 New <span>Releases</span></div>
+  </div>
+  <div class="grid" id="new-grid"></div>
+
+  <div class="section-header">
+    <div class="section-title">📅 Recently <span>Added</span></div>
+  </div>
+  <div class="grid" id="add-grid"></div>
+</main>
+
+<!-- PLAYER MODAL -->
+<div id="modal">
+  <div class="modal-inner">
+    <div class="modal-header">
+      <div id="modal-title">—</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-player">
+      <iframe id="player-frame" allowfullscreen allow="autoplay; fullscreen"></iframe>
+    </div>
+    <div class="modal-footer">
+      <div class="modal-desc" id="modal-desc"></div>
+      <div class="ep-picker" id="ep-picker" style="display:none">
+        <select class="ep-select" id="season-sel"></select>
+        <select class="ep-select" id="ep-sel"></select>
+        <button class="ep-go" onclick="loadEpisode()">Go</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──
+const VIDSRC   = 'https://vidsrc.to';
+const TMDB_KEY = '6a8db79cd64e75aa44cad940cbc3a596'; // Optional: add your TMDB API key for posters
+const TMDB_IMG = 'https://image.tmdb.org/t/p/w500';
+
+// ── STATE ──
+let currentTab = 'movies';
+let heroItems  = [];
+let heroIndex  = 0;
+let currentItem = null;
+
+// ── VIDSRC API ──
+async function fetchVidsrc(path) {
+  try {
+    const res = await fetch(`${VIDSRC}${path}`);
+    const json = await res.json();
+    return json?.result?.items || json?.result || [];
+  } catch(e) {
+    console.error('VidSrc fetch error:', e);
+    return [];
+  }
+}
+
+// ── TMDB POSTER (fallback if no poster from vidsrc) ──
+async function getTmdbInfo(imdbId) {
+  if (!imdbId) return null;
+  try {
+    // If user has no TMDB key, skip
+    if (!TMDB_KEY) return null;
+    const r = await fetch(`https://api.themoviedb.org/3/find/${imdbId}?api_key=${TMDB_KEY}&external_source=imdb_id`);
+    const d = await r.json();
+    const hit = d.movie_results?.[0] || d.tv_results?.[0];
+    return hit || null;
+  } catch { return null; }
+}
+
+// ── RENDER SKELETON ──
+function renderSkeletons(grid, count = 12) {
+  grid.innerHTML = Array.from({length: count}, () =>
+    `<div class="skeleton skeleton-card"></div>`
+  ).join('');
+}
+
+// ── RENDER CARD ──
+function renderCard(item, type) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.imdb  = item.imdb_id || '';
+  card.dataset.tmdb  = item.tmdb_id || '';
+  card.dataset.title = item.title || item.name || 'Unknown';
+  card.dataset.type  = type;
+  card.dataset.seasons = item.seasons || 1;
+
+  const poster = item.poster
+    ? (item.poster.startsWith('http') ? item.poster : TMDB_IMG + item.poster)
+    : `https://via.placeholder.com/300x450/12151d/6b7280?text=${encodeURIComponent(card.dataset.title)}`;
+
+  const year = (item.first_air_date || item.release_date || '').slice(0,4);
+
+  card.innerHTML = `
+    <img class="card-poster" src="${poster}" alt="${card.dataset.title}" loading="lazy"
+         onerror="this.src='https://via.placeholder.com/300x450/12151d/6b7280?text=No+Image'"/>
+    <div class="card-overlay">
+      <div class="play-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-title">${card.dataset.title}</div>
+      <div class="card-meta">
+        <span class="card-type">${type === 'movie' ? 'MOVIE' : 'TV'}</span>
+        ${year ? `<span>${year}</span>` : ''}
+      </div>
+    </div>`;
+
+  card.addEventListener('click', () => openModal(card.dataset));
+  return card;
+}
+
+// ── LOAD SECTION ──
+async function loadSection(type, endpoint, gridId) {
+  const grid = document.getElementById(gridId);
+  renderSkeletons(grid);
+  const prefix = type === 'movie' ? '/vapi/movie' : '/vapi/tv';
+  const items  = await fetchVidsrc(`${prefix}/${endpoint}`);
+
+  grid.innerHTML = '';
+  if (!items.length) {
+    grid.innerHTML = '<div class="empty">No results found.</div>';
+    return;
+  }
+  items.forEach(item => grid.appendChild(renderCard(item, type)));
+  return items;
+}
+
+// ── LOAD HERO ──
+function setHero(item, type) {
+  const title = item.title || item.name || 'Unknown';
+  const poster = item.poster
+    ? (item.poster.startsWith('http') ? item.poster : TMDB_IMG + item.poster)
+    : '';
+
+  document.getElementById('hero-title').textContent = title;
+  document.getElementById('hero-desc').textContent  = item.overview || 'No description available.';
+
+  const imgEl = document.getElementById('hero-img');
+  if (poster) { imgEl.src = poster; imgEl.style.opacity = '0.25'; }
+  else imgEl.style.opacity = '0';
+
+  document.getElementById('hero-play').onclick = () => openModal({
+    imdb: item.imdb_id, tmdb: item.tmdb_id,
+    title, type, seasons: item.seasons || 1
+  });
+}
+
+// ── OPEN MODAL ──
+function openModal(data) {
+  currentItem = data;
+  const { imdb, tmdb, title, type } = data;
+  const id = imdb || tmdb;
+
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-desc').textContent  = '';
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  const picker = document.getElementById('ep-picker');
+  const frame  = document.getElementById('player-frame');
+
+  if (type === 'movie') {
+    picker.style.display = 'none';
+    frame.src = `${VIDSRC}/embed/movie/${id}`;
+  } else {
+    // TV show - show season/episode selectors
+    picker.style.display = 'flex';
+    const seasons = parseInt(data.seasons) || 1;
+    const seasonSel = document.getElementById('season-sel');
+    seasonSel.innerHTML = Array.from({length: seasons}, (_,i) =>
+      `<option value="${i+1}">Season ${i+1}</option>`
+    ).join('');
+    buildEpList();
+    frame.src = `${VIDSRC}/embed/tv/${id}/1/1`;
+  }
+}
+
+function buildEpList() {
+  const eps = document.getElementById('ep-sel');
+  eps.innerHTML = Array.from({length: 30}, (_,i) =>
+    `<option value="${i+1}">Episode ${i+1}</option>`
+  ).join('');
+}
+
+function loadEpisode() {
+  if (!currentItem) return;
+  const id  = currentItem.imdb || currentItem.tmdb;
+  const s   = document.getElementById('season-sel').value;
+  const e   = document.getElementById('ep-sel').value;
+  document.getElementById('player-frame').src = `${VIDSRC}/embed/tv/${id}/${s}/${e}`;
+}
+
+// ── CLOSE MODAL ──
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.getElementById('player-frame').src = '';
+  document.body.style.overflow = '';
+  currentItem = null;
+}
+
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal')) closeModal();
+});
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── SWITCH TAB ──
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.nav-tab').forEach((el, i) => {
+    el.classList.toggle('active', (i === 0 && tab === 'movies') || (i === 1 && tab === 'tv'));
+  });
+  initContent();
+}
+
+// ── SEARCH ──
+let searchTimeout;
+document.getElementById('search-input').addEventListener('input', e => {
+  clearTimeout(searchTimeout);
+  const q = e.target.value.trim();
+  if (!q) { initContent(); return; }
+  searchTimeout = setTimeout(() => searchContent(q), 500);
+});
+
+async function searchContent(query) {
+  // Use TMDB search if key provided, else filter local results
+  const newGrid = document.getElementById('new-grid');
+  const addGrid = document.getElementById('add-grid');
+
+  document.querySelector('.section-header:nth-of-type(1) .section-title').innerHTML =
+    `🔍 Search <span>Results</span>`;
+
+  newGrid.innerHTML = '<div class="empty">Searching via TMDB…</div>';
+  addGrid.innerHTML = '';
+
+  if (!TMDB_KEY) {
+    newGrid.innerHTML = `<div class="empty">
+      Add a TMDB API key in the script config to enable search.<br>
+      <small style="margin-top:8px;display:block">Get one free at <a href="https://www.themoviedb.org/settings/api" target="_blank" style="color:var(--accent)">themoviedb.org</a></small>
+    </div>`;
+    return;
+  }
+
+  const type = currentTab === 'movies' ? 'movie' : 'tv';
+  const r = await fetch(`https://api.themoviedb.org/3/search/${type}?api_key=${TMDB_KEY}&query=${encodeURIComponent(query)}`);
+  const d = await r.json();
+
+  newGrid.innerHTML = '';
+  if (!d.results?.length) {
+    newGrid.innerHTML = '<div class="empty">No results found.</div>';
+    return;
+  }
+
+  d.results.forEach(m => {
+    const item = {
+      imdb_id: m.imdb_id || null,
+      tmdb_id: String(m.id),
+      title: m.title || m.name,
+      poster: m.poster_path ? TMDB_IMG + m.poster_path : '',
+      first_air_date: m.release_date || m.first_air_date,
+      seasons: m.number_of_seasons || 1,
+    };
+    newGrid.appendChild(renderCard(item, type === 'movie' ? 'movie' : 'tv'));
+  });
+}
+
+// ── INIT ──
+async function initContent() {
+  const type = currentTab === 'movies' ? 'movie' : 'tv';
+
+  document.querySelector('.section-header:nth-of-type(1) .section-title').innerHTML =
+    `🆕 New <span>Releases</span>`;
+  document.querySelector('.section-header:nth-of-type(2) .section-title').innerHTML =
+    `📅 Recently <span>Added</span>`;
+
+  // Load both grids in parallel
+  const [newItems] = await Promise.all([
+    loadSection(type, 'new', 'new-grid'),
+    loadSection(type, 'add', 'add-grid'),
+  ]);
+
+  // Set hero to first item
+  if (newItems?.length) setHero(newItems[0], type);
+}
+
+// ── BOOT ──
+initContent();
+</script>
+</body>
+</html>
