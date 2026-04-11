@@ -1,363 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>StreamVault — Watch Free</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --bg: #080a0f;
-    --surface: #0e1117;
-    --card: #12151d;
-    --border: #1e2330;
-    --accent: #e63946;
-    --accent2: #f4a261;
-    --text: #e8eaf0;
-    --muted: #6b7280;
-    --radius: 10px;
-  }
+:root{
+  --bg:#080a0f;--surface:#0e1117;--card:#12151d;--border:#1e2330;
+  --accent:#e63946;--accent2:#f4a261;--text:#e8eaf0;--muted:#6b7280;--r:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.35}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* NAV */
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 32px;background:rgba(8,10,15,.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:2px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:4px}
+.tab{padding:7px 18px;border-radius:6px;border:none;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:500;cursor:pointer;transition:all .2s}
+.tab.active,.tab:hover{background:var(--accent);color:#fff}
+.search-wrap{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 14px}
+.search-wrap input{background:none;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.875rem;width:200px}
+.search-wrap input::placeholder{color:var(--muted)}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+/* HERO */
+#hero{position:relative;height:72vh;min-height:460px;display:flex;align-items:flex-end;padding:52px 44px;overflow:hidden}
+#hero-bg{position:absolute;inset:0;background:#0d0f1a}
+#hero-bg img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s ease}
+#hero-bg img.show{opacity:.32}
+#hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,rgba(8,10,15,.5) 50%,transparent 100%),linear-gradient(to right,var(--bg) 0%,transparent 55%)}
+.hero-content{position:relative;z-index:2;max-width:580px}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;font-size:.68rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:4px;margin-bottom:14px}
+#hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.6rem,5vw,4.2rem);line-height:1;letter-spacing:1px;margin-bottom:14px}
+#hero-overview{color:#a0aec0;font-size:.9rem;line-height:1.65;margin-bottom:26px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.hero-btns{display:flex;gap:12px}
+.btn-play{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;border:none;padding:13px 26px;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.btn-play:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(230,57,70,.45)}
 
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none; z-index: 9999; opacity: 0.4;
-  }
+/* MAIN */
+main{padding:0 32px 72px;max-width:1400px;margin:0 auto}
+.sec-hdr{display:flex;align-items:center;margin:44px 0 20px}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:1.65rem;letter-spacing:1px}
+.sec-title span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 
-  nav {
-    position: sticky; top: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 32px;
-    background: rgba(8,10,15,0.85);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
-  }
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:16px}
+.card{position:relative;border-radius:var(--r);overflow:hidden;background:var(--card);border:1px solid var(--border);cursor:pointer;transition:transform .25s,box-shadow .25s}
+.card:hover{transform:translateY(-7px) scale(1.025);box-shadow:0 18px 44px rgba(0,0,0,.65)}
+.card:hover .c-overlay{opacity:1}
+.card-img{aspect-ratio:2/3;width:100%;object-fit:cover;display:block;background:var(--surface)}
+.c-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.96) 0%,rgba(0,0,0,.15) 55%,transparent 100%);opacity:0;transition:opacity .25s;display:flex;align-items:center;justify-content:center}
+.play-circle{width:50px;height:50px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(230,57,70,.55);margin-bottom:64px}
+.play-circle svg{fill:#fff;margin-left:3px}
+.c-info{position:absolute;bottom:0;left:0;right:0;padding:12px 10px;background:linear-gradient(transparent,rgba(0,0,0,.93))}
+.c-title{font-size:.78rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:5px}
+.c-meta{display:flex;gap:6px;align-items:center;font-size:.66rem;color:var(--muted)}
+.badge-type{background:var(--accent);color:#fff;font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:3px;letter-spacing:.5px}
+.badge-q{background:rgba(244,162,97,.18);color:var(--accent2);font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:3px}
 
-  .logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2rem;
-    letter-spacing: 2px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+/* SKELETON */
+.skel{background:linear-gradient(90deg,var(--card) 25%,var(--surface) 50%,var(--card) 75%);background-size:200% 100%;animation:shim 1.4s infinite;border-radius:var(--r)}
+@keyframes shim{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-card{aspect-ratio:2/3}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:48px;font-size:.9rem}
 
-  .nav-tabs {
-    display: flex; gap: 4px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 4px;
-  }
+/* MODAL */
+#modal{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.93);backdrop-filter:blur(14px);flex-direction:column;align-items:center;justify-content:center;padding:20px}
+#modal.open{display:flex}
+.modal-box{background:var(--card);border:1px solid var(--border);border-radius:14px;width:100%;max-width:960px;overflow:hidden;animation:popIn .25s cubic-bezier(.175,.885,.32,1.275) both}
+@keyframes popIn{from{transform:scale(.88);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
+#modal-title{font-family:'Bebas Neue',sans-serif;font-size:1.45rem;letter-spacing:1px}
+.modal-x{width:32px;height:32px;border-radius:50%;background:var(--surface);border:1px solid var(--border);color:var(--text);font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s}
+.modal-x:hover{background:var(--accent)}
+.modal-player{position:relative;aspect-ratio:16/9;width:100%;background:#000}
+.modal-player iframe{width:100%;height:100%;border:none}
+.modal-ftr{padding:14px 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.modal-overview{color:var(--muted);font-size:.82rem;line-height:1.55;flex:1;min-width:200px}
+.ep-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ep-sel{background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer;outline:none}
+.ep-go{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:7px 16px;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer}
 
-  .nav-tab {
-    padding: 7px 18px;
-    border-radius: 6px;
-    border: none;
-    background: transparent;
-    color: var(--muted);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .nav-tab.active, .nav-tab:hover { background: var(--accent); color: #fff; }
-
-  .search-wrap {
-    display: flex; align-items: center; gap: 8px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 14px;
-  }
-  .search-wrap input {
-    background: none; border: none; outline: none;
-    color: var(--text); font-family: 'DM Sans', sans-serif;
-    font-size: 0.875rem; width: 200px;
-  }
-  .search-wrap input::placeholder { color: var(--muted); }
-
-  #hero {
-    position: relative;
-    height: 70vh; min-height: 440px;
-    display: flex; align-items: flex-end;
-    padding: 48px 40px;
-    overflow: hidden;
-  }
-
-  #hero-bg {
-    position: absolute; inset: 0;
-    background: linear-gradient(135deg, #0d0f1a 0%, #1a0a14 100%);
-  }
-
-  #hero-bg img {
-    width: 100%; height: 100%; object-fit: cover;
-    opacity: 0; transition: opacity 0.8s ease;
-  }
-  #hero-bg img.loaded { opacity: 0.3; }
-
-  #hero::after {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(to top, var(--bg) 0%, transparent 60%),
-                linear-gradient(to right, var(--bg) 0%, transparent 55%);
-  }
-
-  .hero-content {
-    position: relative; z-index: 2;
-    max-width: 560px;
-  }
-
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: var(--accent);
-    color: #fff; font-size: 0.7rem; font-weight: 600;
-    letter-spacing: 1.5px; text-transform: uppercase;
-    padding: 4px 10px; border-radius: 4px; margin-bottom: 12px;
-  }
-
-  #hero-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    line-height: 1; letter-spacing: 1px;
-    margin-bottom: 14px;
-  }
-
-  #hero-desc {
-    color: #a0aec0; font-size: 0.9rem; line-height: 1.6;
-    margin-bottom: 24px;
-    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .hero-actions { display: flex; gap: 12px; }
-
-  .btn-primary {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--accent); color: #fff; border: none;
-    padding: 12px 24px; border-radius: var(--radius);
-    font-family: 'DM Sans', sans-serif; font-weight: 600;
-    font-size: 0.9rem; cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(230,57,70,.4); }
-
-  .btn-outline {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(255,255,255,.08); color: var(--text);
-    border: 1px solid var(--border);
-    padding: 12px 24px; border-radius: var(--radius);
-    font-family: 'DM Sans', sans-serif; font-weight: 500;
-    font-size: 0.9rem; cursor: pointer; backdrop-filter: blur(8px);
-    transition: background 0.2s;
-  }
-  .btn-outline:hover { background: rgba(255,255,255,.14); }
-
-  main { padding: 0 32px 60px; max-width: 1400px; margin: 0 auto; }
-
-  .section-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin: 40px 0 20px;
-  }
-
-  .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.6rem; letter-spacing: 1px;
-  }
-  .section-title span {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 16px;
-  }
-
-  .card {
-    position: relative;
-    border-radius: var(--radius);
-    overflow: hidden;
-    background: var(--card);
-    border: 1px solid var(--border);
-    cursor: pointer;
-    transition: transform 0.25s, box-shadow 0.25s;
-  }
-  .card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 16px 40px rgba(0,0,0,.6); }
-  .card:hover .card-overlay { opacity: 1; }
-
-  .card-poster {
-    aspect-ratio: 2/3; width: 100%;
-    object-fit: cover; display: block;
-    background: var(--surface);
-    transition: opacity 0.4s;
-  }
-
-  .card-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,.95) 0%, rgba(0,0,0,.2) 60%, transparent 100%);
-    opacity: 0; transition: opacity 0.25s;
-    display: flex; align-items: center; justify-content: center;
-  }
-
-  .play-btn {
-    width: 48px; height: 48px;
-    background: var(--accent); border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 16px rgba(230,57,70,.5);
-    margin-bottom: 60px;
-  }
-  .play-btn svg { fill: #fff; margin-left: 3px; }
-
-  .card-info {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    padding: 12px 10px;
-    background: linear-gradient(transparent, rgba(0,0,0,.92));
-  }
-
-  .card-title {
-    font-size: 0.78rem; font-weight: 600;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    margin-bottom: 4px;
-  }
-
-  .card-meta {
-    display: flex; gap: 8px; align-items: center;
-    font-size: 0.68rem; color: var(--muted);
-  }
-
-  .card-type {
-    background: var(--accent); color: #fff;
-    font-size: 0.6rem; font-weight: 700;
-    padding: 2px 6px; border-radius: 3px; letter-spacing: 0.5px;
-  }
-
-  .card-quality {
-    background: rgba(244,162,97,0.2); color: var(--accent2);
-    font-size: 0.6rem; font-weight: 700;
-    padding: 2px 6px; border-radius: 3px;
-  }
-
-  /* Modal */
-  #modal {
-    display: none;
-    position: fixed; inset: 0; z-index: 200;
-    background: rgba(0,0,0,.92);
-    backdrop-filter: blur(12px);
-    flex-direction: column; align-items: center; justify-content: center;
-    padding: 20px;
-  }
-  #modal.open { display: flex; }
-
-  .modal-inner {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    width: 100%; max-width: 960px;
-    overflow: hidden;
-    animation: popIn .25s cubic-bezier(.175,.885,.32,1.275) both;
-  }
-
-  @keyframes popIn {
-    from { transform: scale(.9); opacity: 0; }
-    to   { transform: scale(1);  opacity: 1; }
-  }
-
-  .modal-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  #modal-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.4rem; letter-spacing: 1px;
-  }
-
-  .modal-close {
-    width: 32px; height: 32px; border-radius: 50%;
-    background: var(--surface); border: 1px solid var(--border);
-    color: var(--text); font-size: 1.2rem;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: background .2s;
-  }
-  .modal-close:hover { background: var(--accent); }
-
-  .modal-player { position: relative; aspect-ratio: 16/9; width: 100%; background: #000; }
-  .modal-player iframe { width: 100%; height: 100%; border: none; }
-
-  .modal-footer {
-    padding: 14px 20px;
-    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
-  }
-
-  .modal-desc { color: var(--muted); font-size: 0.82rem; line-height: 1.5; flex: 1; min-width: 200px; }
-
-  .ep-picker { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-
-  .ep-select {
-    background: var(--surface); color: var(--text);
-    border: 1px solid var(--border); border-radius: 6px;
-    padding: 6px 10px; font-family: 'DM Sans', sans-serif;
-    font-size: 0.8rem; cursor: pointer; outline: none;
-  }
-
-  .ep-go {
-    background: var(--accent); color: #fff; border: none;
-    border-radius: 6px; padding: 6px 14px;
-    font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
-    font-weight: 600; cursor: pointer;
-  }
-
-  /* Skeleton */
-  .skeleton {
-    background: linear-gradient(90deg, var(--card) 25%, var(--surface) 50%, var(--card) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.4s infinite;
-    border-radius: var(--radius);
-  }
-  @keyframes shimmer {
-    0%   { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-  .skeleton-card { aspect-ratio: 2/3; }
-
-  .empty {
-    grid-column: 1 / -1;
-    text-align: center; color: var(--muted);
-    padding: 40px; font-size: 0.9rem;
-  }
-
-  @media (max-width: 768px) {
-    nav { padding: 12px 16px; }
-    .search-wrap input { width: 120px; }
-    main { padding: 0 16px 60px; }
-    #hero { padding: 32px 20px; }
-    .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
-  }
-
-  @media (max-width: 480px) {
-    .nav-tabs { display: none; }
-    .grid { grid-template-columns: repeat(3, 1fr); }
-  }
-
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+@media(max-width:768px){nav{padding:12px 16px}.search-wrap input{width:120px}main{padding:0 14px 60px}#hero{padding:28px 18px}.grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}}
+@media(max-width:480px){.nav-tabs{display:none}.grid{grid-template-columns:repeat(3,1fr)}}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 </style>
 </head>
 <body>
@@ -365,360 +93,338 @@
 <nav>
   <div class="logo">StreamVault</div>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="switchTab('movies')">Movies</button>
-    <button class="nav-tab" onclick="switchTab('tv')">TV Shows</button>
+    <button class="tab active" data-tab="movie" onclick="switchTab(this)">Movies</button>
+    <button class="tab" data-tab="tv" onclick="switchTab(this)">TV Shows</button>
   </div>
   <div class="search-wrap">
     <span>🔍</span>
-    <input type="text" id="search-input" placeholder="Search titles…" />
+    <input id="q" type="text" placeholder="Search titles…"/>
   </div>
 </nav>
 
 <div id="hero">
-  <div id="hero-bg"><img id="hero-img" src="" alt=""/></div>
+  <div id="hero-bg"><img id="hbg" src="" alt=""/></div>
   <div class="hero-content">
     <div class="hero-badge">🔥 Trending Now</div>
     <div id="hero-title">Loading…</div>
-    <div id="hero-desc"></div>
-    <div class="hero-actions">
-      <button class="btn-primary" id="hero-play">▶ Watch Now</button>
+    <div id="hero-overview"></div>
+    <div class="hero-btns">
+      <button class="btn-play" id="hero-btn">▶ Watch Now</button>
     </div>
   </div>
 </div>
 
 <main>
-  <div class="section-header">
-    <div class="section-title" id="title-new">🆕 New <span>Releases</span></div>
-  </div>
-  <div class="grid" id="new-grid"></div>
-
-  <div class="section-header">
-    <div class="section-title" id="title-add">📅 Recently <span>Added</span></div>
-  </div>
-  <div class="grid" id="add-grid"></div>
+  <div class="sec-hdr"><div class="sec-title" id="t1">🆕 New <span>Releases</span></div></div>
+  <div class="grid" id="g1"></div>
+  <div class="sec-hdr"><div class="sec-title" id="t2">📅 Recently <span>Added</span></div></div>
+  <div class="grid" id="g2"></div>
 </main>
 
 <div id="modal">
-  <div class="modal-inner">
-    <div class="modal-header">
+  <div class="modal-box">
+    <div class="modal-hdr">
       <div id="modal-title">—</div>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <button class="modal-x" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-player">
-      <iframe id="player-frame" allowfullscreen allow="autoplay; fullscreen"></iframe>
+      <iframe id="pframe" allowfullscreen allow="autoplay;fullscreen"></iframe>
     </div>
-    <div class="modal-footer">
-      <div class="modal-desc" id="modal-desc"></div>
-      <div class="ep-picker" id="ep-picker" style="display:none">
-        <select class="ep-select" id="season-sel" onchange="buildEpList()"></select>
-        <select class="ep-select" id="ep-sel"></select>
-        <button class="ep-go" onclick="loadEpisode()">Go</button>
+    <div class="modal-ftr">
+      <div class="modal-overview" id="modal-ov"></div>
+      <div class="ep-row" id="ep-row" style="display:none">
+        <select class="ep-sel" id="s-sel" onchange="fillEps()"></select>
+        <select class="ep-sel" id="e-sel"></select>
+        <button class="ep-go" onclick="goEp()">Go</button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// ── CONFIG ──────────────────────────────────────────────────────────────────
-const VIDSRC    = 'https://vidsrc.to';
-// TMDB public read-access token (free, no account needed for basic use)
-// Get yours free at https://www.themoviedb.org/settings/api
-// Replace the value below with your own TMDB API key (v3 auth)
-const TMDB_KEY  = '8265bd1679663a7ea12ac168da84d2e8'; // public demo key
-const TMDB_IMG  = 'https://image.tmdb.org/t/p/';
+/* ── CONFIG ──────────────────────────────────── */
+const VSRC     = 'https://vidsrc.to';
+// TMDB key – get your own free at https://www.themoviedb.org/settings/api
+// Using TMDB's trending endpoint means ONE request gets 20 items WITH posters
+const TKEY     = '8265bd1679663a7ea12ac168da84d2e8';
+const TIMG     = 'https://image.tmdb.org/t/p/';
+// CORS proxy to fetch VidSrc API (avoids CORS block in browser)
+const PROXY    = 'https://corsproxy.io/?url=';
 
-// ── STATE ────────────────────────────────────────────────────────────────────
-let currentTab  = 'movies';
-let currentItem = null;
+/* ── STATE ───────────────────────────────────── */
+let mediaType  = 'movie';
+let curItem    = null;
+const cache    = {};
 
-// ── TMDB: fetch movie/show details by TMDB id ────────────────────────────────
-const tmdbCache = {};
+/* ── HELPERS ─────────────────────────────────── */
+const $  = id => document.getElementById(id);
+const qs = s  => document.querySelector(s);
 
-async function getTmdbById(tmdbId, mediaType) {
-  const key = `${mediaType}_${tmdbId}`;
-  if (tmdbCache[key]) return tmdbCache[key];
-  try {
-    const url = `https://api.themoviedb.org/3/${mediaType}/${tmdbId}?api_key=${TMDB_KEY}`;
-    const res  = await fetch(url);
-    if (!res.ok) return null;
-    const data = await res.json();
-    tmdbCache[key] = data;
-    return data;
-  } catch { return null; }
+function skels(grid, n=12){
+  grid.innerHTML = Array(n).fill(`<div class="skel skel-card"></div>`).join('');
 }
 
-// ── TMDB: search by title (fallback) ────────────────────────────────────────
-async function searchTmdb(query, mediaType) {
-  try {
-    const url = `https://api.themoviedb.org/3/search/${mediaType}?api_key=${TMDB_KEY}&query=${encodeURIComponent(query)}`;
-    const res  = await fetch(url);
-    const data = await res.json();
-    return data.results?.[0] || null;
-  } catch { return null; }
+/* ── TMDB fetch (trending gives poster in one call) ── */
+async function tmdbTrending(type, page=1){
+  const k = `trend_${type}_${page}`;
+  if(cache[k]) return cache[k];
+  try{
+    const r = await fetch(`https://api.themoviedb.org/3/trending/${type}/week?api_key=${TKEY}&page=${page}`);
+    const d = await r.json();
+    cache[k] = d.results || [];
+    return cache[k];
+  }catch{ return []; }
 }
 
-// ── FETCH VIDSRC API ─────────────────────────────────────────────────────────
-async function fetchVidsrc(path) {
-  try {
-    const res  = await fetch(`${VIDSRC}${path}`);
-    const json = await res.json();
-    return json?.result?.items || json?.result || [];
-  } catch(e) {
-    console.error('VidSrc fetch error:', e);
+async function tmdbSearch(query, type){
+  try{
+    const r = await fetch(`https://api.themoviedb.org/3/search/${type}?api_key=${TKEY}&query=${encodeURIComponent(query)}`);
+    const d = await r.json();
+    return d.results || [];
+  }catch{ return []; }
+}
+
+async function tmdbById(id, type){
+  const k = `${type}_${id}`;
+  if(cache[k]) return cache[k];
+  try{
+    const r = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${TKEY}`);
+    const d = await r.json();
+    cache[k] = d;
+    return d;
+  }catch{ return null; }
+}
+
+/* ── VidSrc API ── */
+async function vsrcList(type, endpoint){
+  const pfx  = type === 'movie' ? 'movie' : 'tv';
+  const url  = `${VSRC}/vapi/${pfx}/${endpoint}`;
+  try{
+    // Try direct first (works if CORS is open), fall back to proxy
+    let r;
+    try{
+      r = await fetch(url);
+      if(!r.ok) throw new Error();
+    }catch{
+      r = await fetch(PROXY + encodeURIComponent(url));
+    }
+    const j = await r.json();
+    return j?.result?.items || j?.result || [];
+  }catch(e){
+    console.warn('vsrc fetch failed', e);
     return [];
   }
 }
 
-// ── RENDER SKELETONS ─────────────────────────────────────────────────────────
-function renderSkeletons(grid, count = 12) {
-  grid.innerHTML = Array.from({length: count}, () =>
-    `<div class="skeleton skeleton-card"></div>`
-  ).join('');
+/* ── Match VidSrc items with TMDB data by tmdb_id ── */
+async function enrichItems(vsItems, tmdbItems, type){
+  // Build a lookup from tmdb_id → tmdb data
+  const lookup = {};
+  tmdbItems.forEach(t => { lookup[String(t.id)] = t; });
+
+  return vsItems.map(v => {
+    const tmdb = lookup[String(v.tmdb_id)] || null;
+    return { ...v, tmdb };
+  });
 }
 
-// ── BUILD & POPULATE CARD ────────────────────────────────────────────────────
-// Creates an empty card immediately, then fills poster+title async
-function createCard(item, type) {
-  const card = document.createElement('div');
+/* ── RENDER CARD ── */
+function makeCard(item, type){
+  const card  = document.createElement('div');
   card.className = 'card';
 
-  const tmdbId  = item.tmdb_id  || item.tmdb  || '';
-  const imdbId  = item.imdb_id  || item.imdb  || '';
-  const quality = item.quality  || '';
+  const tmdb    = item.tmdb;
+  const title   = tmdb ? (tmdb.title || tmdb.name) : (item.title || item.name || '?');
+  const poster  = tmdb?.poster_path ? `${TIMG}w342${tmdb.poster_path}` : '';
+  const year    = (tmdb?.release_date || tmdb?.first_air_date || '').slice(0,4);
+  const q       = item.quality || '';
+  const fallback= `https://placehold.co/300x450/12151d/555555?text=${encodeURIComponent(title)}`;
 
-  // Placeholder while loading
   card.innerHTML = `
-    <div class="skeleton skeleton-card" style="aspect-ratio:2/3;width:100%"></div>
-    <div class="card-overlay">
-      <div class="play-btn">
+    <img class="card-img" src="${poster || fallback}" alt="${title}" loading="lazy"
+         onerror="this.src='${fallback}'"/>
+    <div class="c-overlay">
+      <div class="play-circle">
         <svg width="18" height="18" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
       </div>
     </div>
-    <div class="card-info">
-      <div class="card-title" style="background:var(--surface);height:10px;border-radius:4px;width:80%"></div>
-      <div class="card-meta" style="margin-top:6px">
-        <span class="card-type">${type === 'movie' ? 'MOVIE' : 'TV'}</span>
-        ${quality ? `<span class="card-quality">${quality}</span>` : ''}
+    <div class="c-info">
+      <div class="c-title">${title}</div>
+      <div class="c-meta">
+        <span class="badge-type">${type==='movie'?'MOVIE':'TV'}</span>
+        ${q?`<span class="badge-q">${q}</span>`:''}
+        ${year?`<span>${year}</span>`:''}
       </div>
     </div>`;
 
-  // Async: fetch real data from TMDB
-  const mediaType = type === 'movie' ? 'movie' : 'tv';
-  getTmdbById(tmdbId, mediaType).then(info => {
-    if (!info) return;
-
-    const title   = info.title || info.name || 'Unknown';
-    const poster  = info.poster_path  ? `${TMDB_IMG}w342${info.poster_path}`  : '';
-    const backdrop= info.backdrop_path? `${TMDB_IMG}w1280${info.backdrop_path}`: '';
-    const year    = (info.release_date || info.first_air_date || '').slice(0,4);
-    const overview= info.overview || '';
-    const seasons = info.number_of_seasons || 1;
-
-    // Store enriched data on card element
-    card.dataset.tmdb     = tmdbId;
-    card.dataset.imdb     = imdbId;
-    card.dataset.title    = title;
-    card.dataset.type     = type;
-    card.dataset.overview = overview;
-    card.dataset.backdrop = backdrop;
-    card.dataset.seasons  = seasons;
-    card.dataset.quality  = quality;
-
-    card.innerHTML = `
-      <img class="card-poster"
-           src="${poster || `https://placehold.co/300x450/12151d/444?text=${encodeURIComponent(title)}`}"
-           alt="${title}" loading="lazy"
-           onerror="this.src='https://placehold.co/300x450/12151d/444?text=No+Image'"/>
-      <div class="card-overlay">
-        <div class="play-btn">
-          <svg width="18" height="18" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        </div>
-      </div>
-      <div class="card-info">
-        <div class="card-title">${title}</div>
-        <div class="card-meta">
-          <span class="card-type">${type === 'movie' ? 'MOVIE' : 'TV'}</span>
-          ${quality ? `<span class="card-quality">${quality}</span>` : ''}
-          ${year    ? `<span>${year}</span>` : ''}
-        </div>
-      </div>`;
-
-    card.addEventListener('click', () => openModal(card.dataset));
+  card.addEventListener('click', ()=>{
+    openModal({
+      imdb   : item.imdb_id || '',
+      tmdb_id: item.tmdb_id || (tmdb?.id ? String(tmdb.id) : ''),
+      title,
+      type,
+      overview: tmdb?.overview || '',
+      backdrop: tmdb?.backdrop_path ? `${TIMG}original${tmdb.backdrop_path}` : '',
+      seasons : tmdb?.number_of_seasons || 1,
+      quality : q
+    });
   });
 
   return card;
 }
 
-// ── LOAD SECTION ─────────────────────────────────────────────────────────────
-async function loadSection(type, endpoint, gridId) {
-  const grid = document.getElementById(gridId);
-  renderSkeletons(grid);
-  const prefix = type === 'movie' ? '/vapi/movie' : '/vapi/tv';
-  const items  = await fetchVidsrc(`${prefix}/${endpoint}`);
+/* ── SET HERO ── */
+function setHero(item, type){
+  const tmdb   = item.tmdb;
+  if(!tmdb) return;
+  const title  = tmdb.title || tmdb.name || '';
+  const ov     = tmdb.overview || '';
+  const bd     = tmdb.backdrop_path ? `${TIMG}original${tmdb.backdrop_path}` : '';
+  const imdb   = item.imdb_id || '';
+  const tmdbId = item.tmdb_id || String(tmdb.id);
+  const seasons= tmdb.number_of_seasons || 1;
 
-  grid.innerHTML = '';
-  if (!items.length) {
-    grid.innerHTML = '<div class="empty">No results found.</div>';
-    return [];
-  }
-  items.forEach(item => grid.appendChild(createCard(item, type)));
-  return items;
-}
+  $('hero-title').textContent   = title;
+  $('hero-overview').textContent= ov;
 
-// ── HERO ──────────────────────────────────────────────────────────────────────
-async function setHero(item, type) {
-  const tmdbId    = item.tmdb_id || item.tmdb || '';
-  const imdbId    = item.imdb_id || item.imdb || '';
-  const mediaType = type === 'movie' ? 'movie' : 'tv';
-
-  document.getElementById('hero-title').textContent = '…';
-
-  const info = await getTmdbById(tmdbId, mediaType);
-  if (!info) return;
-
-  const title    = info.title || info.name || 'Unknown';
-  const overview = info.overview || '';
-  const backdrop = info.backdrop_path ? `${TMDB_IMG}original${info.backdrop_path}` : '';
-  const seasons  = info.number_of_seasons || 1;
-
-  document.getElementById('hero-title').textContent = title;
-  document.getElementById('hero-desc').textContent  = overview;
-
-  if (backdrop) {
-    const img = document.getElementById('hero-img');
-    img.onload = () => img.classList.add('loaded');
-    img.src = backdrop;
+  if(bd){
+    const img = $('hbg');
+    img.onload = ()=> img.classList.add('show');
+    img.src = bd;
   }
 
-  document.getElementById('hero-play').onclick = () => openModal({
-    tmdb: tmdbId, imdb: imdbId, title,
-    type, overview, seasons,
-    backdrop, quality: item.quality || ''
+  $('hero-btn').onclick = ()=> openModal({
+    imdb: imdb, tmdb_id: tmdbId, title, type,
+    overview: ov, backdrop: bd, seasons, quality: item.quality||''
   });
 }
 
-// ── OPEN MODAL ────────────────────────────────────────────────────────────────
-function openModal(data) {
-  currentItem = data;
-  const { imdb, tmdb, title, type, overview, seasons } = data;
-  const id = imdb || tmdb;
+/* ── LOAD SECTION ── */
+async function loadSection(type, vsEndpoint, tmdbPage, gridId){
+  const grid = $(gridId);
+  skels(grid);
 
-  document.getElementById('modal-title').textContent = title || '—';
-  document.getElementById('modal-desc').textContent  = overview || '';
-  document.getElementById('modal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-
-  const picker = document.getElementById('ep-picker');
-  const frame  = document.getElementById('player-frame');
-
-  if (type === 'movie') {
-    picker.style.display = 'none';
-    frame.src = `${VIDSRC}/embed/movie/${id}`;
-  } else {
-    picker.style.display = 'flex';
-    const totalSeasons = parseInt(seasons) || 1;
-    const seasonSel = document.getElementById('season-sel');
-    seasonSel.innerHTML = Array.from({length: totalSeasons}, (_,i) =>
-      `<option value="${i+1}">Season ${i+1}</option>`
-    ).join('');
-    buildEpList();
-    frame.src = `${VIDSRC}/embed/tv/${id}/1/1`;
-  }
-}
-
-function buildEpList() {
-  const eps = document.getElementById('ep-sel');
-  eps.innerHTML = Array.from({length: 30}, (_,i) =>
-    `<option value="${i+1}">Episode ${i+1}</option>`
-  ).join('');
-}
-
-function loadEpisode() {
-  if (!currentItem) return;
-  const id = currentItem.imdb || currentItem.tmdb;
-  const s  = document.getElementById('season-sel').value;
-  const e  = document.getElementById('ep-sel').value;
-  document.getElementById('player-frame').src = `${VIDSRC}/embed/tv/${id}/${s}/${e}`;
-}
-
-function closeModal() {
-  document.getElementById('modal').classList.remove('open');
-  document.getElementById('player-frame').src = '';
-  document.body.style.overflow = '';
-  currentItem = null;
-}
-
-document.getElementById('modal').addEventListener('click', e => {
-  if (e.target === document.getElementById('modal')) closeModal();
-});
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-// ── SEARCH ────────────────────────────────────────────────────────────────────
-let searchTimeout;
-document.getElementById('search-input').addEventListener('input', e => {
-  clearTimeout(searchTimeout);
-  const q = e.target.value.trim();
-  if (!q) { initContent(); return; }
-  searchTimeout = setTimeout(() => doSearch(q), 500);
-});
-
-async function doSearch(query) {
-  const newGrid = document.getElementById('new-grid');
-  const addGrid = document.getElementById('add-grid');
-  document.getElementById('title-new').innerHTML = `🔍 Search <span>Results</span>`;
-  document.getElementById('title-add').innerHTML = '';
-  renderSkeletons(newGrid, 8);
-  addGrid.innerHTML = '';
-
-  const mediaType = currentTab === 'movies' ? 'movie' : 'tv';
-  try {
-    const res  = await fetch(`https://api.themoviedb.org/3/search/${mediaType}?api_key=${TMDB_KEY}&query=${encodeURIComponent(query)}`);
-    const data = await res.json();
-    newGrid.innerHTML = '';
-    if (!data.results?.length) {
-      newGrid.innerHTML = '<div class="empty">No results found.</div>';
-      return;
-    }
-    data.results.forEach(m => {
-      const fakeItem = { tmdb_id: String(m.id), imdb_id: '', quality: '' };
-      newGrid.appendChild(createCard(fakeItem, currentTab === 'movies' ? 'movie' : 'tv'));
-    });
-  } catch {
-    newGrid.innerHTML = '<div class="empty">Search failed. Try again.</div>';
-  }
-}
-
-// ── TAB SWITCH ────────────────────────────────────────────────────────────────
-function switchTab(tab) {
-  currentTab = tab;
-  document.querySelectorAll('.nav-tab').forEach((el, i) => {
-    el.classList.toggle('active', (i === 0 && tab === 'movies') || (i === 1 && tab === 'tv'));
-  });
-  document.getElementById('search-input').value = '';
-  initContent();
-}
-
-// ── INIT ──────────────────────────────────────────────────────────────────────
-async function initContent() {
-  const type = currentTab === 'movies' ? 'movie' : 'tv';
-  document.getElementById('title-new').innerHTML = `🆕 New <span>Releases</span>`;
-  document.getElementById('title-add').innerHTML = `📅 Recently <span>Added</span>`;
-
-  // Reset hero
-  document.getElementById('hero-title').textContent = 'Loading…';
-  document.getElementById('hero-desc').textContent  = '';
-  document.getElementById('hero-img').className     = '';
-  document.getElementById('hero-img').src           = '';
-
-  const [newItems] = await Promise.all([
-    loadSection(type, 'new', 'new-grid'),
-    loadSection(type, 'add', 'add-grid'),
+  // Fetch both in parallel
+  const [vsItems, tmdbItems] = await Promise.all([
+    vsrcList(type, vsEndpoint),
+    tmdbTrending(type, tmdbPage)
   ]);
 
-  if (newItems?.length) setHero(newItems[0], type);
+  // If VidSrc returned nothing, just show TMDB trending with dummy imdb ids
+  const source = vsItems.length
+    ? await enrichItems(vsItems, tmdbItems, type)
+    : tmdbItems.map(t=>({ tmdb_id: String(t.id), imdb_id:'', quality:'', tmdb: t }));
+
+  grid.innerHTML = '';
+  if(!source.length){
+    grid.innerHTML = '<div class="empty">Nothing to show right now.</div>';
+    return source;
+  }
+  source.forEach(item => grid.appendChild(makeCard(item, type)));
+  return source;
 }
 
-initContent();
+/* ── OPEN MODAL ── */
+function openModal(d){
+  curItem = d;
+  const id = d.imdb || d.tmdb_id;
+  $('modal-title').textContent = d.title || '—';
+  $('modal-ov').textContent    = d.overview || '';
+  $('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  const epRow = $('ep-row');
+  const frame = $('pframe');
+
+  if(d.type === 'movie'){
+    epRow.style.display = 'none';
+    frame.src = `${VSRC}/embed/movie/${id}`;
+  } else {
+    epRow.style.display = 'flex';
+    const n = parseInt(d.seasons)||1;
+    $('s-sel').innerHTML = Array.from({length:n},(_,i)=>`<option value="${i+1}">Season ${i+1}</option>`).join('');
+    fillEps();
+    frame.src = `${VSRC}/embed/tv/${id}/1/1`;
+  }
+}
+
+function fillEps(){
+  $('e-sel').innerHTML = Array.from({length:30},(_,i)=>`<option value="${i+1}">Episode ${i+1}</option>`).join('');
+}
+
+function goEp(){
+  if(!curItem) return;
+  const id = curItem.imdb || curItem.tmdb_id;
+  $('pframe').src = `${VSRC}/embed/tv/${id}/${$('s-sel').value}/${$('e-sel').value}`;
+}
+
+function closeModal(){
+  $('modal').classList.remove('open');
+  $('pframe').src = '';
+  document.body.style.overflow = '';
+  curItem = null;
+}
+
+$('modal').addEventListener('click', e=>{ if(e.target===$('modal')) closeModal(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+/* ── SEARCH ── */
+let st;
+$('q').addEventListener('input', e=>{
+  clearTimeout(st);
+  const v = e.target.value.trim();
+  if(!v){ init(); return; }
+  st = setTimeout(()=> doSearch(v), 480);
+});
+
+async function doSearch(q){
+  $('t1').innerHTML = `🔍 Search <span>Results</span>`;
+  $('t2').innerHTML = '';
+  const g1 = $('g1'); const g2 = $('g2');
+  skels(g1, 8); g2.innerHTML = '';
+
+  const type    = mediaType;
+  const results = await tmdbSearch(q, type);
+  g1.innerHTML  = '';
+  if(!results.length){ g1.innerHTML='<div class="empty">No results.</div>'; return; }
+
+  results.forEach(t=>{
+    const fakeItem = { imdb_id:'', tmdb_id: String(t.id), quality:'', tmdb: t };
+    g1.appendChild(makeCard(fakeItem, type));
+  });
+}
+
+/* ── SWITCH TAB ── */
+function switchTab(btn){
+  document.querySelectorAll('.tab').forEach(t=> t.classList.remove('active'));
+  btn.classList.add('active');
+  mediaType = btn.dataset.tab;
+  $('q').value = '';
+  init();
+}
+
+/* ── INIT ── */
+async function init(){
+  const t = mediaType;
+  $('t1').innerHTML = `🆕 New <span>Releases</span>`;
+  $('t2').innerHTML = `📅 Recently <span>Added</span>`;
+  $('hero-title').textContent    = 'Loading…';
+  $('hero-overview').textContent = '';
+  const img = $('hbg');
+  img.classList.remove('show');
+  img.src = '';
+
+  const [sec1] = await Promise.all([
+    loadSection(t, 'new', 1, 'g1'),
+    loadSection(t, 'add', 2, 'g2'),
+  ]);
+
+  // Hero: pick first item that has a backdrop
+  const hero = sec1.find(i=> i.tmdb?.backdrop_path) || sec1[0];
+  if(hero) setHero(hero, t);
+}
+
+init();
 </script>
 </body>
 </html>
