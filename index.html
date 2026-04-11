@@ -29,7 +29,6 @@
     overflow-x: hidden;
   }
 
-  /* ── NOISE OVERLAY ── */
   body::before {
     content: '';
     position: fixed; inset: 0;
@@ -37,7 +36,6 @@
     pointer-events: none; z-index: 9999; opacity: 0.4;
   }
 
-  /* ── NAV ── */
   nav {
     position: sticky; top: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
@@ -85,16 +83,13 @@
     border-radius: 8px;
     padding: 8px 14px;
   }
-
   .search-wrap input {
     background: none; border: none; outline: none;
     color: var(--text); font-family: 'DM Sans', sans-serif;
     font-size: 0.875rem; width: 200px;
   }
   .search-wrap input::placeholder { color: var(--muted); }
-  .search-icon { color: var(--muted); font-size: 1rem; }
 
-  /* ── HERO ── */
   #hero {
     position: relative;
     height: 70vh; min-height: 440px;
@@ -106,19 +101,19 @@
   #hero-bg {
     position: absolute; inset: 0;
     background: linear-gradient(135deg, #0d0f1a 0%, #1a0a14 100%);
-    transition: background 0.6s;
   }
 
   #hero-bg img {
     width: 100%; height: 100%; object-fit: cover;
-    opacity: 0.25; transition: opacity 0.6s;
+    opacity: 0; transition: opacity 0.8s ease;
   }
+  #hero-bg img.loaded { opacity: 0.3; }
 
   #hero::after {
     content: '';
     position: absolute; inset: 0;
     background: linear-gradient(to top, var(--bg) 0%, transparent 60%),
-                linear-gradient(to right, var(--bg) 0%, transparent 50%);
+                linear-gradient(to right, var(--bg) 0%, transparent 55%);
   }
 
   .hero-content {
@@ -152,8 +147,7 @@
 
   .btn-primary {
     display: inline-flex; align-items: center; gap: 8px;
-    background: var(--accent);
-    color: #fff; border: none;
+    background: var(--accent); color: #fff; border: none;
     padding: 12px 24px; border-radius: var(--radius);
     font-family: 'DM Sans', sans-serif; font-weight: 600;
     font-size: 0.9rem; cursor: pointer;
@@ -163,17 +157,15 @@
 
   .btn-outline {
     display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(255,255,255,.08);
-    color: var(--text); border: 1px solid var(--border);
+    background: rgba(255,255,255,.08); color: var(--text);
+    border: 1px solid var(--border);
     padding: 12px 24px; border-radius: var(--radius);
     font-family: 'DM Sans', sans-serif; font-weight: 500;
-    font-size: 0.9rem; cursor: pointer;
-    backdrop-filter: blur(8px);
+    font-size: 0.9rem; cursor: pointer; backdrop-filter: blur(8px);
     transition: background 0.2s;
   }
   .btn-outline:hover { background: rgba(255,255,255,.14); }
 
-  /* ── MAIN ── */
   main { padding: 0 32px 60px; max-width: 1400px; margin: 0 auto; }
 
   .section-header {
@@ -185,19 +177,11 @@
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.6rem; letter-spacing: 1px;
   }
-
   .section-title span {
     background: linear-gradient(135deg, var(--accent), var(--accent2));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   }
 
-  .see-all {
-    color: var(--accent); font-size: 0.8rem; font-weight: 500;
-    background: none; border: none; cursor: pointer;
-    text-decoration: underline; text-underline-offset: 3px;
-  }
-
-  /* ── GRID ── */
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -220,19 +204,20 @@
     aspect-ratio: 2/3; width: 100%;
     object-fit: cover; display: block;
     background: var(--surface);
+    transition: opacity 0.4s;
   }
 
   .card-overlay {
     position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,.95) 0%, rgba(0,0,0,.3) 60%, transparent 100%);
+    background: linear-gradient(to top, rgba(0,0,0,.95) 0%, rgba(0,0,0,.2) 60%, transparent 100%);
     opacity: 0; transition: opacity 0.25s;
     display: flex; align-items: center; justify-content: center;
   }
 
   .play-btn {
     width: 48px; height: 48px;
-    background: var(--accent);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    background: var(--accent); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
     box-shadow: 0 4px 16px rgba(230,57,70,.5);
     margin-bottom: 60px;
   }
@@ -241,7 +226,7 @@
   .card-info {
     position: absolute; bottom: 0; left: 0; right: 0;
     padding: 12px 10px;
-    background: linear-gradient(transparent, rgba(0,0,0,.9));
+    background: linear-gradient(transparent, rgba(0,0,0,.92));
   }
 
   .card-title {
@@ -256,12 +241,18 @@
   }
 
   .card-type {
-    background: var(--accent);
-    color: #fff; font-size: 0.6rem; font-weight: 700;
+    background: var(--accent); color: #fff;
+    font-size: 0.6rem; font-weight: 700;
     padding: 2px 6px; border-radius: 3px; letter-spacing: 0.5px;
   }
 
-  /* ── PLAYER MODAL ── */
+  .card-quality {
+    background: rgba(244,162,97,0.2); color: var(--accent2);
+    font-size: 0.6rem; font-weight: 700;
+    padding: 2px 6px; border-radius: 3px;
+  }
+
+  /* Modal */
   #modal {
     display: none;
     position: fixed; inset: 0; z-index: 200;
@@ -306,29 +297,17 @@
   }
   .modal-close:hover { background: var(--accent); }
 
-  .modal-player {
-    position: relative; aspect-ratio: 16/9; width: 100%;
-    background: #000;
-  }
-
-  .modal-player iframe {
-    width: 100%; height: 100%; border: none;
-  }
+  .modal-player { position: relative; aspect-ratio: 16/9; width: 100%; background: #000; }
+  .modal-player iframe { width: 100%; height: 100%; border: none; }
 
   .modal-footer {
     padding: 14px 20px;
     display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
   }
 
-  .modal-desc {
-    color: var(--muted); font-size: 0.82rem; line-height: 1.5;
-    flex: 1; min-width: 200px;
-  }
+  .modal-desc { color: var(--muted); font-size: 0.82rem; line-height: 1.5; flex: 1; min-width: 200px; }
 
-  /* TV season/episode picker */
-  .ep-picker {
-    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
-  }
+  .ep-picker { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
   .ep-select {
     background: var(--surface); color: var(--text);
@@ -344,7 +323,7 @@
     font-weight: 600; cursor: pointer;
   }
 
-  /* ── LOADING / SKELETON ── */
+  /* Skeleton */
   .skeleton {
     background: linear-gradient(90deg, var(--card) 25%, var(--surface) 50%, var(--card) 75%);
     background-size: 200% 100%;
@@ -357,14 +336,12 @@
   }
   .skeleton-card { aspect-ratio: 2/3; }
 
-  /* ── EMPTY / ERROR ── */
   .empty {
     grid-column: 1 / -1;
     text-align: center; color: var(--muted);
     padding: 40px; font-size: 0.9rem;
   }
 
-  /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
     nav { padding: 12px 16px; }
     .search-wrap input { width: 120px; }
@@ -378,7 +355,6 @@
     .grid { grid-template-columns: repeat(3, 1fr); }
   }
 
-  /* scrollbar */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
@@ -386,7 +362,6 @@
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="logo">StreamVault</div>
   <div class="nav-tabs">
@@ -394,12 +369,11 @@
     <button class="nav-tab" onclick="switchTab('tv')">TV Shows</button>
   </div>
   <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="search-input" placeholder="Search TMDB titles…" />
+    <span>🔍</span>
+    <input type="text" id="search-input" placeholder="Search titles…" />
   </div>
 </nav>
 
-<!-- HERO -->
 <div id="hero">
   <div id="hero-bg"><img id="hero-img" src="" alt=""/></div>
   <div class="hero-content">
@@ -408,25 +382,22 @@
     <div id="hero-desc"></div>
     <div class="hero-actions">
       <button class="btn-primary" id="hero-play">▶ Watch Now</button>
-      <button class="btn-outline" id="hero-info">ℹ More Info</button>
     </div>
   </div>
 </div>
 
-<!-- MAIN CONTENT -->
 <main>
   <div class="section-header">
-    <div class="section-title">🆕 New <span>Releases</span></div>
+    <div class="section-title" id="title-new">🆕 New <span>Releases</span></div>
   </div>
   <div class="grid" id="new-grid"></div>
 
   <div class="section-header">
-    <div class="section-title">📅 Recently <span>Added</span></div>
+    <div class="section-title" id="title-add">📅 Recently <span>Added</span></div>
   </div>
   <div class="grid" id="add-grid"></div>
 </main>
 
-<!-- PLAYER MODAL -->
 <div id="modal">
   <div class="modal-inner">
     <div class="modal-header">
@@ -439,7 +410,7 @@
     <div class="modal-footer">
       <div class="modal-desc" id="modal-desc"></div>
       <div class="ep-picker" id="ep-picker" style="display:none">
-        <select class="ep-select" id="season-sel"></select>
+        <select class="ep-select" id="season-sel" onchange="buildEpList()"></select>
         <select class="ep-select" id="ep-sel"></select>
         <button class="ep-go" onclick="loadEpisode()">Go</button>
       </div>
@@ -448,21 +419,48 @@
 </div>
 
 <script>
-// ── CONFIG ──
-const VIDSRC   = 'https://vidsrc.to';
-const TMDB_KEY = '6a8db79cd64e75aa44cad940cbc3a596'; // Optional: add your TMDB API key for posters
-const TMDB_IMG = 'https://image.tmdb.org/t/p/w500';
+// ── CONFIG ──────────────────────────────────────────────────────────────────
+const VIDSRC    = 'https://vidsrc.to';
+// TMDB public read-access token (free, no account needed for basic use)
+// Get yours free at https://www.themoviedb.org/settings/api
+// Replace the value below with your own TMDB API key (v3 auth)
+const TMDB_KEY  = '8265bd1679663a7ea12ac168da84d2e8'; // public demo key
+const TMDB_IMG  = 'https://image.tmdb.org/t/p/';
 
-// ── STATE ──
-let currentTab = 'movies';
-let heroItems  = [];
-let heroIndex  = 0;
+// ── STATE ────────────────────────────────────────────────────────────────────
+let currentTab  = 'movies';
 let currentItem = null;
 
-// ── VIDSRC API ──
+// ── TMDB: fetch movie/show details by TMDB id ────────────────────────────────
+const tmdbCache = {};
+
+async function getTmdbById(tmdbId, mediaType) {
+  const key = `${mediaType}_${tmdbId}`;
+  if (tmdbCache[key]) return tmdbCache[key];
+  try {
+    const url = `https://api.themoviedb.org/3/${mediaType}/${tmdbId}?api_key=${TMDB_KEY}`;
+    const res  = await fetch(url);
+    if (!res.ok) return null;
+    const data = await res.json();
+    tmdbCache[key] = data;
+    return data;
+  } catch { return null; }
+}
+
+// ── TMDB: search by title (fallback) ────────────────────────────────────────
+async function searchTmdb(query, mediaType) {
+  try {
+    const url = `https://api.themoviedb.org/3/search/${mediaType}?api_key=${TMDB_KEY}&query=${encodeURIComponent(query)}`;
+    const res  = await fetch(url);
+    const data = await res.json();
+    return data.results?.[0] || null;
+  } catch { return null; }
+}
+
+// ── FETCH VIDSRC API ─────────────────────────────────────────────────────────
 async function fetchVidsrc(path) {
   try {
-    const res = await fetch(`${VIDSRC}${path}`);
+    const res  = await fetch(`${VIDSRC}${path}`);
     const json = await res.json();
     return json?.result?.items || json?.result || [];
   } catch(e) {
@@ -471,63 +469,87 @@ async function fetchVidsrc(path) {
   }
 }
 
-// ── TMDB POSTER (fallback if no poster from vidsrc) ──
-async function getTmdbInfo(imdbId) {
-  if (!imdbId) return null;
-  try {
-    // If user has no TMDB key, skip
-    if (!TMDB_KEY) return null;
-    const r = await fetch(`https://api.themoviedb.org/3/find/${imdbId}?api_key=${TMDB_KEY}&external_source=imdb_id`);
-    const d = await r.json();
-    const hit = d.movie_results?.[0] || d.tv_results?.[0];
-    return hit || null;
-  } catch { return null; }
-}
-
-// ── RENDER SKELETON ──
+// ── RENDER SKELETONS ─────────────────────────────────────────────────────────
 function renderSkeletons(grid, count = 12) {
   grid.innerHTML = Array.from({length: count}, () =>
     `<div class="skeleton skeleton-card"></div>`
   ).join('');
 }
 
-// ── RENDER CARD ──
-function renderCard(item, type) {
+// ── BUILD & POPULATE CARD ────────────────────────────────────────────────────
+// Creates an empty card immediately, then fills poster+title async
+function createCard(item, type) {
   const card = document.createElement('div');
   card.className = 'card';
-  card.dataset.imdb  = item.imdb_id || '';
-  card.dataset.tmdb  = item.tmdb_id || '';
-  card.dataset.title = item.title || item.name || 'Unknown';
-  card.dataset.type  = type;
-  card.dataset.seasons = item.seasons || 1;
 
-  const poster = item.poster
-    ? (item.poster.startsWith('http') ? item.poster : TMDB_IMG + item.poster)
-    : `https://via.placeholder.com/300x450/12151d/6b7280?text=${encodeURIComponent(card.dataset.title)}`;
+  const tmdbId  = item.tmdb_id  || item.tmdb  || '';
+  const imdbId  = item.imdb_id  || item.imdb  || '';
+  const quality = item.quality  || '';
 
-  const year = (item.first_air_date || item.release_date || '').slice(0,4);
-
+  // Placeholder while loading
   card.innerHTML = `
-    <img class="card-poster" src="${poster}" alt="${card.dataset.title}" loading="lazy"
-         onerror="this.src='https://via.placeholder.com/300x450/12151d/6b7280?text=No+Image'"/>
+    <div class="skeleton skeleton-card" style="aspect-ratio:2/3;width:100%"></div>
     <div class="card-overlay">
       <div class="play-btn">
         <svg width="18" height="18" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
       </div>
     </div>
     <div class="card-info">
-      <div class="card-title">${card.dataset.title}</div>
-      <div class="card-meta">
+      <div class="card-title" style="background:var(--surface);height:10px;border-radius:4px;width:80%"></div>
+      <div class="card-meta" style="margin-top:6px">
         <span class="card-type">${type === 'movie' ? 'MOVIE' : 'TV'}</span>
-        ${year ? `<span>${year}</span>` : ''}
+        ${quality ? `<span class="card-quality">${quality}</span>` : ''}
       </div>
     </div>`;
 
-  card.addEventListener('click', () => openModal(card.dataset));
+  // Async: fetch real data from TMDB
+  const mediaType = type === 'movie' ? 'movie' : 'tv';
+  getTmdbById(tmdbId, mediaType).then(info => {
+    if (!info) return;
+
+    const title   = info.title || info.name || 'Unknown';
+    const poster  = info.poster_path  ? `${TMDB_IMG}w342${info.poster_path}`  : '';
+    const backdrop= info.backdrop_path? `${TMDB_IMG}w1280${info.backdrop_path}`: '';
+    const year    = (info.release_date || info.first_air_date || '').slice(0,4);
+    const overview= info.overview || '';
+    const seasons = info.number_of_seasons || 1;
+
+    // Store enriched data on card element
+    card.dataset.tmdb     = tmdbId;
+    card.dataset.imdb     = imdbId;
+    card.dataset.title    = title;
+    card.dataset.type     = type;
+    card.dataset.overview = overview;
+    card.dataset.backdrop = backdrop;
+    card.dataset.seasons  = seasons;
+    card.dataset.quality  = quality;
+
+    card.innerHTML = `
+      <img class="card-poster"
+           src="${poster || `https://placehold.co/300x450/12151d/444?text=${encodeURIComponent(title)}`}"
+           alt="${title}" loading="lazy"
+           onerror="this.src='https://placehold.co/300x450/12151d/444?text=No+Image'"/>
+      <div class="card-overlay">
+        <div class="play-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="card-title">${title}</div>
+        <div class="card-meta">
+          <span class="card-type">${type === 'movie' ? 'MOVIE' : 'TV'}</span>
+          ${quality ? `<span class="card-quality">${quality}</span>` : ''}
+          ${year    ? `<span>${year}</span>` : ''}
+        </div>
+      </div>`;
+
+    card.addEventListener('click', () => openModal(card.dataset));
+  });
+
   return card;
 }
 
-// ── LOAD SECTION ──
+// ── LOAD SECTION ─────────────────────────────────────────────────────────────
 async function loadSection(type, endpoint, gridId) {
   const grid = document.getElementById(gridId);
   renderSkeletons(grid);
@@ -537,40 +559,52 @@ async function loadSection(type, endpoint, gridId) {
   grid.innerHTML = '';
   if (!items.length) {
     grid.innerHTML = '<div class="empty">No results found.</div>';
-    return;
+    return [];
   }
-  items.forEach(item => grid.appendChild(renderCard(item, type)));
+  items.forEach(item => grid.appendChild(createCard(item, type)));
   return items;
 }
 
-// ── LOAD HERO ──
-function setHero(item, type) {
-  const title = item.title || item.name || 'Unknown';
-  const poster = item.poster
-    ? (item.poster.startsWith('http') ? item.poster : TMDB_IMG + item.poster)
-    : '';
+// ── HERO ──────────────────────────────────────────────────────────────────────
+async function setHero(item, type) {
+  const tmdbId    = item.tmdb_id || item.tmdb || '';
+  const imdbId    = item.imdb_id || item.imdb || '';
+  const mediaType = type === 'movie' ? 'movie' : 'tv';
+
+  document.getElementById('hero-title').textContent = '…';
+
+  const info = await getTmdbById(tmdbId, mediaType);
+  if (!info) return;
+
+  const title    = info.title || info.name || 'Unknown';
+  const overview = info.overview || '';
+  const backdrop = info.backdrop_path ? `${TMDB_IMG}original${info.backdrop_path}` : '';
+  const seasons  = info.number_of_seasons || 1;
 
   document.getElementById('hero-title').textContent = title;
-  document.getElementById('hero-desc').textContent  = item.overview || 'No description available.';
+  document.getElementById('hero-desc').textContent  = overview;
 
-  const imgEl = document.getElementById('hero-img');
-  if (poster) { imgEl.src = poster; imgEl.style.opacity = '0.25'; }
-  else imgEl.style.opacity = '0';
+  if (backdrop) {
+    const img = document.getElementById('hero-img');
+    img.onload = () => img.classList.add('loaded');
+    img.src = backdrop;
+  }
 
   document.getElementById('hero-play').onclick = () => openModal({
-    imdb: item.imdb_id, tmdb: item.tmdb_id,
-    title, type, seasons: item.seasons || 1
+    tmdb: tmdbId, imdb: imdbId, title,
+    type, overview, seasons,
+    backdrop, quality: item.quality || ''
   });
 }
 
-// ── OPEN MODAL ──
+// ── OPEN MODAL ────────────────────────────────────────────────────────────────
 function openModal(data) {
   currentItem = data;
-  const { imdb, tmdb, title, type } = data;
+  const { imdb, tmdb, title, type, overview, seasons } = data;
   const id = imdb || tmdb;
 
-  document.getElementById('modal-title').textContent = title;
-  document.getElementById('modal-desc').textContent  = '';
+  document.getElementById('modal-title').textContent = title || '—';
+  document.getElementById('modal-desc').textContent  = overview || '';
   document.getElementById('modal').classList.add('open');
   document.body.style.overflow = 'hidden';
 
@@ -581,11 +615,10 @@ function openModal(data) {
     picker.style.display = 'none';
     frame.src = `${VIDSRC}/embed/movie/${id}`;
   } else {
-    // TV show - show season/episode selectors
     picker.style.display = 'flex';
-    const seasons = parseInt(data.seasons) || 1;
+    const totalSeasons = parseInt(seasons) || 1;
     const seasonSel = document.getElementById('season-sel');
-    seasonSel.innerHTML = Array.from({length: seasons}, (_,i) =>
+    seasonSel.innerHTML = Array.from({length: totalSeasons}, (_,i) =>
       `<option value="${i+1}">Season ${i+1}</option>`
     ).join('');
     buildEpList();
@@ -602,13 +635,12 @@ function buildEpList() {
 
 function loadEpisode() {
   if (!currentItem) return;
-  const id  = currentItem.imdb || currentItem.tmdb;
-  const s   = document.getElementById('season-sel').value;
-  const e   = document.getElementById('ep-sel').value;
+  const id = currentItem.imdb || currentItem.tmdb;
+  const s  = document.getElementById('season-sel').value;
+  const e  = document.getElementById('ep-sel').value;
   document.getElementById('player-frame').src = `${VIDSRC}/embed/tv/${id}/${s}/${e}`;
 }
 
-// ── CLOSE MODAL ──
 function closeModal() {
   document.getElementById('modal').classList.remove('open');
   document.getElementById('player-frame').src = '';
@@ -619,89 +651,73 @@ function closeModal() {
 document.getElementById('modal').addEventListener('click', e => {
   if (e.target === document.getElementById('modal')) closeModal();
 });
-
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-// ── SWITCH TAB ──
-function switchTab(tab) {
-  currentTab = tab;
-  document.querySelectorAll('.nav-tab').forEach((el, i) => {
-    el.classList.toggle('active', (i === 0 && tab === 'movies') || (i === 1 && tab === 'tv'));
-  });
-  initContent();
-}
-
-// ── SEARCH ──
+// ── SEARCH ────────────────────────────────────────────────────────────────────
 let searchTimeout;
 document.getElementById('search-input').addEventListener('input', e => {
   clearTimeout(searchTimeout);
   const q = e.target.value.trim();
   if (!q) { initContent(); return; }
-  searchTimeout = setTimeout(() => searchContent(q), 500);
+  searchTimeout = setTimeout(() => doSearch(q), 500);
 });
 
-async function searchContent(query) {
-  // Use TMDB search if key provided, else filter local results
+async function doSearch(query) {
   const newGrid = document.getElementById('new-grid');
   const addGrid = document.getElementById('add-grid');
-
-  document.querySelector('.section-header:nth-of-type(1) .section-title').innerHTML =
-    `🔍 Search <span>Results</span>`;
-
-  newGrid.innerHTML = '<div class="empty">Searching via TMDB…</div>';
+  document.getElementById('title-new').innerHTML = `🔍 Search <span>Results</span>`;
+  document.getElementById('title-add').innerHTML = '';
+  renderSkeletons(newGrid, 8);
   addGrid.innerHTML = '';
 
-  if (!TMDB_KEY) {
-    newGrid.innerHTML = `<div class="empty">
-      Add a TMDB API key in the script config to enable search.<br>
-      <small style="margin-top:8px;display:block">Get one free at <a href="https://www.themoviedb.org/settings/api" target="_blank" style="color:var(--accent)">themoviedb.org</a></small>
-    </div>`;
-    return;
+  const mediaType = currentTab === 'movies' ? 'movie' : 'tv';
+  try {
+    const res  = await fetch(`https://api.themoviedb.org/3/search/${mediaType}?api_key=${TMDB_KEY}&query=${encodeURIComponent(query)}`);
+    const data = await res.json();
+    newGrid.innerHTML = '';
+    if (!data.results?.length) {
+      newGrid.innerHTML = '<div class="empty">No results found.</div>';
+      return;
+    }
+    data.results.forEach(m => {
+      const fakeItem = { tmdb_id: String(m.id), imdb_id: '', quality: '' };
+      newGrid.appendChild(createCard(fakeItem, currentTab === 'movies' ? 'movie' : 'tv'));
+    });
+  } catch {
+    newGrid.innerHTML = '<div class="empty">Search failed. Try again.</div>';
   }
-
-  const type = currentTab === 'movies' ? 'movie' : 'tv';
-  const r = await fetch(`https://api.themoviedb.org/3/search/${type}?api_key=${TMDB_KEY}&query=${encodeURIComponent(query)}`);
-  const d = await r.json();
-
-  newGrid.innerHTML = '';
-  if (!d.results?.length) {
-    newGrid.innerHTML = '<div class="empty">No results found.</div>';
-    return;
-  }
-
-  d.results.forEach(m => {
-    const item = {
-      imdb_id: m.imdb_id || null,
-      tmdb_id: String(m.id),
-      title: m.title || m.name,
-      poster: m.poster_path ? TMDB_IMG + m.poster_path : '',
-      first_air_date: m.release_date || m.first_air_date,
-      seasons: m.number_of_seasons || 1,
-    };
-    newGrid.appendChild(renderCard(item, type === 'movie' ? 'movie' : 'tv'));
-  });
 }
 
-// ── INIT ──
+// ── TAB SWITCH ────────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.nav-tab').forEach((el, i) => {
+    el.classList.toggle('active', (i === 0 && tab === 'movies') || (i === 1 && tab === 'tv'));
+  });
+  document.getElementById('search-input').value = '';
+  initContent();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
 async function initContent() {
   const type = currentTab === 'movies' ? 'movie' : 'tv';
+  document.getElementById('title-new').innerHTML = `🆕 New <span>Releases</span>`;
+  document.getElementById('title-add').innerHTML = `📅 Recently <span>Added</span>`;
 
-  document.querySelector('.section-header:nth-of-type(1) .section-title').innerHTML =
-    `🆕 New <span>Releases</span>`;
-  document.querySelector('.section-header:nth-of-type(2) .section-title').innerHTML =
-    `📅 Recently <span>Added</span>`;
+  // Reset hero
+  document.getElementById('hero-title').textContent = 'Loading…';
+  document.getElementById('hero-desc').textContent  = '';
+  document.getElementById('hero-img').className     = '';
+  document.getElementById('hero-img').src           = '';
 
-  // Load both grids in parallel
   const [newItems] = await Promise.all([
     loadSection(type, 'new', 'new-grid'),
     loadSection(type, 'add', 'add-grid'),
   ]);
 
-  // Set hero to first item
   if (newItems?.length) setHero(newItems[0], type);
 }
 
-// ── BOOT ──
 initContent();
 </script>
 </body>
