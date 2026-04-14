@@ -25,53 +25,93 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .search-wrap input{background:none;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.875rem;width:200px}
 .search-wrap input::placeholder{color:var(--muted)}
 
-/* HERO */
-#hero{position:relative;height:72vh;min-height:460px;display:flex;align-items:flex-end;padding:52px 44px;overflow:hidden}
-#hero-bg{position:absolute;inset:0;background:#0d0f1a}
+/* HERO — flex column so content sits above strip, no overlap */
+#hero{
+  position:relative;
+  min-height:560px;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  overflow:hidden;
+}
+#hero-bg{position:absolute;inset:0;background:#0d0f1a;z-index:0}
 #hero-bg img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s ease}
 #hero-bg img.show{opacity:.32}
-#hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,rgba(8,10,15,.5) 50%,transparent 100%),linear-gradient(to right,var(--bg) 0%,transparent 55%)}
-.hero-content{position:relative;z-index:2;max-width:580px}
+#hero::after{
+  content:'';position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to top,var(--bg) 0%,rgba(8,10,15,.55) 55%,transparent 100%),
+             linear-gradient(to right,var(--bg) 0%,transparent 60%);
+}
+/* content area — sits above strip */
+.hero-content{
+  position:relative;z-index:2;
+  max-width:580px;
+  padding:52px 44px 24px;
+}
 .hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;font-size:.68rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:4px;margin-bottom:14px}
-#hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.6rem,5vw,4.2rem);line-height:1;letter-spacing:1px;margin-bottom:14px}
-#hero-overview{color:#a0aec0;font-size:.9rem;line-height:1.65;margin-bottom:26px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+#hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,5vw,4rem);line-height:1;letter-spacing:1px;margin-bottom:12px}
+#hero-overview{color:#a0aec0;font-size:.88rem;line-height:1.65;margin-bottom:22px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .hero-btns{display:flex;gap:12px}
-.btn-play{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;border:none;padding:13px 26px;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.btn-play{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;border:none;padding:13px 26px;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative;z-index:4}
 .btn-play:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(230,57,70,.45)}
 
-/* HERO POSTER STRIP */
+/* HERO POSTER STRIP — sits below content, never overlaps */
 #hero-strip{
-  position:absolute;bottom:0;left:0;right:0;z-index:3;
-  padding:0 44px 18px;
-  overflow:hidden;
+  position:relative;z-index:2;
+  padding:18px 44px 22px;
+  /* fade mask left & right */
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 6%,#000 94%,transparent 100%);
+  mask-image:linear-gradient(to right,transparent 0%,#000 6%,#000 94%,transparent 100%);
 }
 .hstrip-inner{
   display:flex;gap:10px;
   overflow-x:auto;scroll-snap-type:x mandatory;
   scrollbar-width:none;-ms-overflow-style:none;
-  padding-bottom:4px;
+  padding:4px 2px 6px;
 }
 .hstrip-inner::-webkit-scrollbar{display:none}
 .hstrip-card{
-  flex:0 0 80px;scroll-snap-align:start;
+  flex:0 0 78px;scroll-snap-align:start;
   border-radius:7px;overflow:hidden;cursor:pointer;
-  border:2px solid transparent;
-  transition:border-color .2s,transform .2s,box-shadow .2s;
-  position:relative;
+  border:2px solid rgba(255,255,255,.1);
+  transition:border-color .25s,transform .25s,box-shadow .25s,opacity .25s;
+  opacity:.65;
 }
 .hstrip-card img{
-  width:80px;height:120px;object-fit:cover;display:block;
+  width:78px;height:117px;object-fit:cover;display:block;
 }
 .hstrip-card:hover{
   border-color:var(--accent);
-  transform:translateY(-4px);
-  box-shadow:0 8px 24px rgba(230,57,70,.5);
+  transform:translateY(-5px) scale(1.04);
+  box-shadow:0 10px 28px rgba(230,57,70,.55);
+  opacity:1;
 }
 .hstrip-card.active-strip{
   border-color:var(--accent2);
-  box-shadow:0 0 0 2px var(--accent2);
+  box-shadow:0 0 0 2px var(--accent2),0 8px 20px rgba(244,162,97,.4);
+  opacity:1;
+  transform:translateY(-3px);
 }
-@media(max-width:768px){#hero-strip{padding:0 14px 12px}.hstrip-card{flex:0 0 62px}.hstrip-card img{width:62px;height:93px}}
+
+/* autoplay progress bar on active card */
+.hstrip-card.active-strip::after{
+  content:'';
+  position:absolute;bottom:0;left:0;height:3px;
+  background:var(--accent2);
+  animation:stripProgress var(--strip-dur,5s) linear forwards;
+}
+@keyframes stripProgress{from{width:0}to{width:100%}}
+
+@media(max-width:768px){
+  .hero-content{padding:28px 18px 18px}
+  #hero-strip{padding:12px 18px 16px}
+  .hstrip-card{flex:0 0 60px}
+  .hstrip-card img{width:60px;height:90px}
+}
+@media(max-width:480px){
+  .hstrip-card{flex:0 0 52px}
+  .hstrip-card img{width:52px;height:78px}
+}
+
+/* MAIN */
 main{padding:0 32px 72px;max-width:1400px;margin:0 auto}
 .sec-hdr{display:flex;align-items:center;margin:44px 0 20px}
 .sec-title{font-family:'Bebas Neue',sans-serif;font-size:1.65rem;letter-spacing:1px}
@@ -361,31 +401,79 @@ function makeCard(item, type){
   return card;
 }
 
-/* ── HERO STRIP ── */
-let heroItems = [];
-let heroType  = 'movie';
+/* ── HERO STRIP + AUTOPLAY ── */
+let heroItems   = [];
+let heroType    = 'movie';
+let stripIdx    = 0;
+let stripTimer  = null;
+const STRIP_DUR = 5000; // ms per slide
 
 function buildHeroStrip(items, type){
   heroItems = items;
   heroType  = type;
+  stripIdx  = 0;
+  clearInterval(stripTimer);
+
   const strip = $('hstrip');
   strip.innerHTML = '';
-  items.slice(0,12).forEach((item, idx) => {
-    const tmdb   = item.tmdb;
-    if(!tmdb) return;
-    const poster = tmdb.poster_path ? `${TIMG}w185${tmdb.poster_path}` : '';
-    const title  = tmdb.title || tmdb.name || '';
-    const fallback = `https://placehold.co/80x120/12151d/555555?text=${encodeURIComponent(title.slice(0,4))}`;
+
+  const validItems = items.slice(0,12).filter(i => i.tmdb);
+  if(!validItems.length) return;
+
+  validItems.forEach((item, idx) => {
+    const tmdb    = item.tmdb;
+    const poster  = tmdb.poster_path ? `${TIMG}w185${tmdb.poster_path}` : '';
+    const title   = tmdb.title || tmdb.name || '';
+    const fallback= `https://placehold.co/78x117/12151d/555555?text=${encodeURIComponent(title.slice(0,4))}`;
+
     const sc = document.createElement('div');
-    sc.className = 'hstrip-card' + (idx===0?' active-strip':'');
+    sc.className = 'hstrip-card' + (idx===0 ? ' active-strip' : '');
+    sc.style.setProperty('--strip-dur', STRIP_DUR + 'ms');
     sc.innerHTML = `<img src="${poster||fallback}" alt="${title}" loading="lazy" onerror="this.src='${fallback}'"/>`;
+
+    // Manual click — jump to that item & restart autoplay
     sc.addEventListener('click', ()=>{
-      document.querySelectorAll('.hstrip-card').forEach(c=>c.classList.remove('active-strip'));
-      sc.classList.add('active-strip');
-      setHero(item, type);
+      activateStrip(idx, validItems, true);
     });
     strip.appendChild(sc);
   });
+
+  // Pause autoplay on hover over the strip
+  const stripEl = $('hero-strip');
+  stripEl.addEventListener('mouseenter', ()=> clearInterval(stripTimer));
+  stripEl.addEventListener('mouseleave', ()=> startAutoplay(validItems));
+
+  // Kick off autoplay
+  startAutoplay(validItems);
+}
+
+function activateStrip(idx, items, resetTimer){
+  stripIdx = idx;
+  const cards = $('hstrip').querySelectorAll('.hstrip-card');
+  cards.forEach((c,i) => {
+    c.classList.toggle('active-strip', i===idx);
+    // Restart the CSS progress bar animation
+    if(i===idx){
+      c.style.setProperty('--strip-dur', STRIP_DUR + 'ms');
+      // Force reflow to restart animation
+      c.classList.remove('active-strip');
+      void c.offsetWidth;
+      c.classList.add('active-strip');
+    }
+  });
+  // Scroll active card into view smoothly
+  if(cards[idx]) cards[idx].scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  // Update hero content
+  setHero(items[idx], heroType);
+  if(resetTimer){ clearInterval(stripTimer); startAutoplay(items); }
+}
+
+function startAutoplay(items){
+  clearInterval(stripTimer);
+  stripTimer = setInterval(()=>{
+    const next = (stripIdx + 1) % items.length;
+    activateStrip(next, items, false);
+  }, STRIP_DUR);
 }
 
 
@@ -515,6 +603,7 @@ function switchTab(btn){
   btn.classList.add('active');
   mediaType = btn.dataset.tab;
   $('q').value = '';
+  clearInterval(stripTimer);
   init();
 }
 
